@@ -14,48 +14,7 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 
 ------------------- JOBS
     PlayerData.metadata['unemployed'] = PlayerData.metadata['unemployed'] or 0
-    PlayerData.metadata['judge'] = PlayerData.metadata['judge'] or 0
-    PlayerData.metadata['governor'] = PlayerData.metadata['governor'] or 0
-    PlayerData.metadata['horse_trainer'] = PlayerData.metadata['horse_trainer'] or 0
-    PlayerData.metadata['hunter'] = PlayerData.metadata['hunter'] or 0
-    PlayerData.metadata['cook'] = PlayerData.metadata['cook'] or 0
-    PlayerData.metadata['innkeeper'] = PlayerData.metadata['innkeeper'] or 0
-    --
-    PlayerData.metadata['valsalooninnkeeper'] = PlayerData.metadata['valsalooninnkeeper'] or 0
-    PlayerData.metadata['blasalooninnkeeper'] = PlayerData.metadata['blasalooninnkeeper'] or 0
-    PlayerData.metadata['rhosalooninnkeeper'] = PlayerData.metadata['rhosalooninnkeeper'] or 0
-    PlayerData.metadata['stdenissalooninnkeeper1'] = PlayerData.metadata['stdenissalooninnkeeper1'] or 0
-    PlayerData.metadata['stdenissalooninnkeeper2'] = PlayerData.metadata['stdenissalooninnkeeper2'] or 0
-    PlayerData.metadata['vansalooninnkeeper'] = PlayerData.metadata['vansalooninnkeeper'] or 0
-    PlayerData.metadata['armsalooninnkeeper'] = PlayerData.metadata['armsalooninnkeeper'] or 0
-    PlayerData.metadata['tumsalooninnkeeper'] = PlayerData.metadata['tumsalooninnkeeper'] or 0
-    PlayerData.metadata['moonsalooninnkeeper1'] = PlayerData.metadata['moonsalooninnkeeper1'] or 0
-    PlayerData.metadata['moonsalooninnkeeper2'] = PlayerData.metadata['moonsalooninnkeeper2'] or 0
-    PlayerData.metadata['moonsalooninnkeeper3'] = PlayerData.metadata['moonsalooninnkeeper3'] or 0
-    PlayerData.metadata['moonsalooninnkeeper4'] = PlayerData.metadata['moonsalooninnkeeper4'] or 0
-    PlayerData.metadata['moonsalooninnkeeper5'] = PlayerData.metadata['moonsalooninnkeeper5'] or 0
-    --
-    PlayerData.metadata['farmer'] = PlayerData.metadata['farmer'] or 0
-    PlayerData.metadata['rancher'] = PlayerData.metadata['rancher'] or 0
-    PlayerData.metadata['beekeeper'] = PlayerData.metadata['beekeeper'] or 0
-    PlayerData.metadata['doctor'] = PlayerData.metadata['doctor'] or 0
-    PlayerData.metadata['veterinarian'] = PlayerData.metadata['veterinarian'] or 0
-    PlayerData.metadata['undertaker'] = PlayerData.metadata['undertaker'] or 0
-    PlayerData.metadata['seamstress'] = PlayerData.metadata['seamstress'] or 0
-    PlayerData.metadata['blacksmith'] = PlayerData.metadata['blacksmith'] or 0
-    PlayerData.metadata['gunsmith'] = PlayerData.metadata['gunsmith'] or 0
-    PlayerData.metadata['watchmaker'] = PlayerData.metadata['watchmaker'] or 0
-    PlayerData.metadata['jeweler'] = PlayerData.metadata['jeweler'] or 0
-    PlayerData.metadata['scribe'] = PlayerData.metadata['scribe'] or 0
-    PlayerData.metadata['construction_worker'] = PlayerData.metadata['construction_worker'] or 0
-    PlayerData.metadata['treasure_hunter'] = PlayerData.metadata['treasure_hunter'] or 0
-    PlayerData.metadata['transporter'] = PlayerData.metadata['transporter'] or 0
-    PlayerData.metadata['merchant'] = PlayerData.metadata['merchant'] or 0
     PlayerData.metadata['police'] = PlayerData.metadata['police'] or 0
-    PlayerData.metadata['prison_guard'] = PlayerData.metadata['prison_guard'] or 0
-    PlayerData.metadata['criminal'] = PlayerData.metadata['criminal'] or 0
-    PlayerData.metadata['bounty_hunter'] = PlayerData.metadata['bounty_hunter'] or 0
-    PlayerData.metadata['lawyer'] = PlayerData.metadata['lawyer'] or 0
     
     -------------- SKILLS
     -- SUPERFIVIENCIA
