@@ -10,7 +10,7 @@ Increased number of skills and reputations
 # Unfinished work
 -- Fix in client.lua / line 29       local currentXP = PlayerData.metadata[data.Rep] or 0
 
--- Fix in server.lua / line 9        local currentxp = PlayerData.PlayerData.metadata[metadata]-- 0  -- Inicializa currentxp en 0
+-- Fix in server.lua / line 9        local currentxp = PlayerData.PlayerData.metadata[metadata]
 
 ## Changes REDM 
 
