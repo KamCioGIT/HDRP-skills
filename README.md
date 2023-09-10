@@ -18,6 +18,7 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
     --JOBS
     - PlayerData.metadata['unemployed'] = PlayerData.metadata['unemployed'] or 0
     - PlayerData.metadata['police'] = PlayerData.metadata['police'] or 0
+
     -- SKILLS
     -- SUPERFIVIENCIA
     - PlayerData.metadata['suerte'] = PlayerData.metadata['suerte'] or 0
@@ -27,18 +28,21 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
     - PlayerData.metadata['pesca'] = PlayerData.metadata['pesca'] or 0
     - PlayerData.metadata['cultivo'] = PlayerData.metadata['cultivo'] or 0
     - PlayerData.metadata['recolector'] = PlayerData.metadata['recolector'] or 0
+
     -- ILEGALES
     - PlayerData.metadata['drogas'] = PlayerData.metadata['drogas'] or 0
     - PlayerData.metadata['robo'] = PlayerData.metadata['robo'] or 0
     - PlayerData.metadata['asesinato'] = PlayerData.metadata['asesinato'] or 0
     - PlayerData.metadata['planificacionderobos'] = PlayerData.metadata['planificacionderobos'] or 0
     - PlayerData.metadata['saqueo'] = PlayerData.metadata['saqueo'] or 0
+
     -- CONOCIMIENTO/SOCIAL
     - PlayerData.metadata['investigacion'] = PlayerData.metadata['investigacion'] or 0
     - PlayerData.metadata['exploracion'] = PlayerData.metadata['exploracion'] or 0
     - PlayerData.metadata['logistica'] = PlayerData.metadata['logistica'] or 0
     - PlayerData.metadata['lectura'] = PlayerData.metadata['lectura'] or 0
     - PlayerData.metadata['escritura'] = PlayerData.metadata['escritura'] or 0
+
    -- MANUALES
     - PlayerData.metadata['mecanica'] = PlayerData.metadata['mecanica'] or 0
     - PlayerData.metadata['fabricacion'] = PlayerData.metadata['fabricacion'] or 0
