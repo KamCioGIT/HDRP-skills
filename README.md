@@ -13,10 +13,12 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 
 
 ------------------- JOBS
+
     PlayerData.metadata['unemployed'] = PlayerData.metadata['unemployed'] or 0
     PlayerData.metadata['police'] = PlayerData.metadata['police'] or 0
     
     -------------- SKILLS
+
     -- SUPERFIVIENCIA
     PlayerData.metadata['suerte'] = PlayerData.metadata['suerte'] or 0
     PlayerData.metadata['primerosauxiliospets'] = PlayerData.metadata['primerosauxiliospets'] or 0
