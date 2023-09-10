@@ -11,10 +11,10 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 
 - Add any meta data (skills) you want into `rsg-core/server/player.lua` 
 
-    ------------------- JOBS
+    -- JOBS
     PlayerData.metadata['unemployed'] = PlayerData.metadata['unemployed'] or 0
     PlayerData.metadata['police'] = PlayerData.metadata['police'] or 0
-    -------------- SKILLS
+    -- SKILLS
     -- SUPERFIVIENCIA
     PlayerData.metadata['suerte'] = PlayerData.metadata['suerte'] or 0
     PlayerData.metadata['primerosauxiliospets'] = PlayerData.metadata['primerosauxiliospets'] or 0
@@ -71,5 +71,4 @@ The way I've set this up is that 100xp is 1 level, this doesn't increment for le
 Credit:
 Originally using - https://github.com/boiidevelopment/boii-skillsmenu-qb on my server before moving to more overextended resources, so I took inspiration from there and expanded upon it to use ox_lib menu.
 Version edit using - https://github.com/ashleyjrobinson/possible-skills  thanks @ashleyjrobinson
-
-Version editada para redm @sadicius
+Version edit using - https://github.com/Sadicius/HDRP-skills editada para redm @sadicius
