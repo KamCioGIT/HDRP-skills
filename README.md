@@ -81,7 +81,7 @@ shouldClose = true
 ## Notes
 The way I've set this up is that 100xp is 1 level, this doesn't increment for levels, but if required you could always give less xp based off the player level or edit accordingly for your needs with it being open-source.
 
-Credit:
+# Credit
 Originally using - https://github.com/boiidevelopment/boii-skillsmenu-qb on my server before moving to more overextended resources, so I took inspiration from there and expanded upon it to use ox_lib menu.
 
 Version edit using - https://github.com/ashleyjrobinson/possible-skills  thanks @ashleyjrobinson
