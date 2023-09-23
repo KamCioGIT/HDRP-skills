@@ -1,44 +1,50 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
---local PlayerData = RSGCore.Functions.GetPlayerData()
 local menus = {}
+local PlayerData = nil
+local currentXP = {}  -- Declarar una tabla para almacenar las experiencias actuales
+
+RegisterNetEvent('RSGCore:Client:OnPlayerLoaded')
+AddEventHandler('RSGCore:Client:OnPlayerLoaded', function(playerData)
+    PlayerData = playerData
+end)
 
 local function XP(args, metadata, amount)
     TriggerServerEvent('HDRP-skills:server:XP', args, metadata, amount)
 end
 exports('XP', XP)
 
-RegisterNetEvent('RSGCore:Client:OnPlayerLoaded')
-AddEventHandler('RSGCore:Client:OnPlayerLoaded', function()
-    --isLoggedIn = true
-    PlayerData = RSGCore.Functions.GetPlayerData()
-end)
 
---[[ RegisterNetEvent('RSGCore:Client:OnPlayerUnload', function()
-    isLoggedIn = false
-    PlayerData = {}
-end) ]]
+local function RegisterCategoryEvent(mainCategory, category, menuData)
+    RegisterNetEvent('HDRP-skills:client:' .. mainCategory .. '_' .. category)
+    AddEventHandler('HDRP-skills:client:' .. mainCategory .. '_' .. category, function()
+        lib.registerContext(menuData)
+        lib.showContext(menuData.id)
+    end)
+end
 
-RegisterNetEvent('RSGCore:Client:OnJobUpdate')
-AddEventHandler('RSGCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerData.job = JobInfo
-end)
+local function CreateMainMenuOption(mainMenu, mainCategory, category)
+    table.insert(mainMenu.options, {
+        title = mainCategory .. ' - ' .. category,
+        description = 'Explora ' .. category,
+        icon = 'fa-solid fa-kitchen-set',
+        event = 'HDRP-skills:client:show_category',
+        args = { mainCategory = mainCategory, category = category },
+        arrow = true
+    })
+end
 
--- Función para agregar una habilidad o reputación a un menú
-local function AddSkillOrReputationToMenu(mainCategory, category, data)
-    local PlayerData = RSGCore.Functions.GetPlayerData()
-    local currentXP = PlayerData.metadata[data.Rep] or 0 
-    
-    --[[local currentXP = RSGCore.Functions.GetPlayerData().metadata[data.Rep] or 0]]
+local function CreateMenuOption(mainCategory, category, data, newXP)
+    local currentXP = newXP or (PlayerData and PlayerData.metadata[data.Rep]) or 0
+    local progress = (currentXP % 100) / 100 * 100
 
     local option = {
         title = data.title,
         icon = data.Icon,
         iconColor = data.IconColour,
-        description = 'Nivel: ' .. math.floor(currentXP / 100) .. '  ' .. 'Experiencia: ' ..((currentXP % 100) / 100 * 100).. '%',
-        progress = { (currentXP % 100) / 100 * 100 },
+        description = 'Nivel: ' .. math.floor(currentXP / 100) .. '  ' .. 'Experiencia: ' .. progress .. '%',
+        progress = { progress },
         colorScheme = data.ProgressColour,
         event = data.event,
-        --metadata = data.skillargs or data.repargs,
         args = data.args,
     }
 
@@ -67,11 +73,12 @@ local function AddSkillOrReputationToMenu(mainCategory, category, data)
     end
 end
 
+
 -- Itera a través de las habilidades y reputaciones
 for _, data in ipairs(Config.Skills) do
     local mainCategory = 'Skills'
     local category = data.categorySkill
-    AddSkillOrReputationToMenu(mainCategory, category, data)
+    CreateMenuOption(mainCategory, category, data)
     if Config.Debug == true then
         print("Itera a través de las habilidades")
         print(mainCategory .. '_' .. category)
@@ -81,7 +88,7 @@ end
 for _, rep in ipairs(Config.JobReputations) do
     local mainCategory = 'Reputaciones'
     local category = rep.categoryJob
-    AddSkillOrReputationToMenu(mainCategory, category, rep)
+    CreateMenuOption(mainCategory, category, rep)
 
     if Config.Debug == true then
         print("Itera a través de las reputaciones")
@@ -92,24 +99,18 @@ end
 -- Registrar eventos de menú por categoría
 for mainCategory, categories in pairs(menus) do
     for category, menuData in pairs(categories) do
-
         if Config.Debug == true then
             print("Registrar eventos de menú por categoría")
             print(mainCategory .. '_' .. category)
         end
-
-        RegisterNetEvent('HDRP-skills:client:' .. mainCategory .. '_' .. category)
-        AddEventHandler('HDRP-skills:client:' .. mainCategory .. '_' .. category, function()
-            lib.registerContext(menuData)
-            lib.showContext(menuData.id)
-        end)
+        RegisterCategoryEvent(mainCategory, category, menuData)
     end
 end
 
 -- Evento principal para abrir el menú principal
 RegisterNetEvent('HDRP-skills:client:openmenu')
-AddEventHandler('HDRP-skills:client:openmenu', function()
-    -- Crear un menú principal con las categorías
+AddEventHandler('HDRP-skills:client:openmenu', function(playerId)
+
     local mainMenu = {
         id = 'main_menu',
         title = 'Menú Principal',
@@ -118,20 +119,16 @@ AddEventHandler('HDRP-skills:client:openmenu', function()
 
     for mainCategory, categories in pairs(menus) do
         for category, _ in pairs(categories) do
-            table.insert(mainMenu.options, {
-                title = mainCategory .. ' - ' .. category,
-                description = 'Explora ' .. category,
-                icon = 'fa-solid fa-kitchen-set',
-                event = 'HDRP-skills:client:show_category',
-                args = { mainCategory = mainCategory, category = category },
-                arrow = true
-            })
+            CreateMainMenuOption(mainMenu, mainCategory, category)
         end
     end
-    print("Crear un menú principal con las categorías")
 
     lib.registerContext(mainMenu)
     lib.showContext(mainMenu.id)
+    -- Después de abrir el menú, solicita las experiencias actualizadas al servidor
+    for metadata, _ in pairs(currentXP) do
+        TriggerServerEvent('HDRP-skills:server:requestXPData', metadata)
+    end
 end)
 
 -- Evento para mostrar habilidades o reputaciones de una categoría específica
@@ -140,6 +137,7 @@ AddEventHandler('HDRP-skills:client:show_category', function(data)
     local mainCategory = data.mainCategory
     local category = data.category
     local categoryMenu = menus[mainCategory][category]
+    --TriggerClientEvent('HDRP-skills:client:updateXPData', playerId, newXP)
 
     if Config.Debug == true then
         print("Evento para mostrar habilidades o reputaciones")
@@ -149,7 +147,13 @@ AddEventHandler('HDRP-skills:client:show_category', function(data)
     lib.showContext(categoryMenu.id)
 end)
 
+-- Actualización de la tabla de experiencias actuales
+RegisterNetEvent('HDRP-skills:client:updateXPData')
+AddEventHandler('HDRP-skills:client:updateXPData', function(metadata, newXP)
+    currentXP[metadata] = newXP
+end)
 
-
-
-
+RegisterNetEvent('HDRP-skills:client:updateProgress')
+AddEventHandler('HDRP-skills:client:updateProgress', function(metadata)
+    print("Evento 'HDRP-skills:client:updateProgress' recibido con metadata: " .. metadata)
+end)
