@@ -7,10 +7,13 @@ Categories for skills or reputation
 Client cleaning
 Increased number of skills and reputations
 
-# Unfinished work
--- Fix in client.lua / line 29       local currentXP = PlayerData.metadata[data.Rep] or 0
+![image](https://github.com/Sadicius/HDRP-skills/assets/124639760/720d2046-11f1-4732-8afb-44fb4638d30b)
 
--- Fix in server.lua / line 9        local currentxp = PlayerData.PlayerData.metadata[metadata]
+![image](https://github.com/Sadicius/HDRP-skills/assets/124639760/02011b45-55d3-45b0-ae9c-518bb0c5cbb5)
+
+
+# Unfinished work
+- experience status update in the menu
 
 ## Changes REDM 
 
