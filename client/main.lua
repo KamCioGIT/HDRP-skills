@@ -1,7 +1,7 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
 local menus = {}
-local PlayerData = nil
-local currentXP = {}  -- Declarar una tabla para almacenar las experiencias actuales
+--local currentXP = {}  -- Declarar una tabla para almacenar las experiencias actuales
+--local currentXP = 0
 
 RegisterNetEvent('RSGCore:Client:OnPlayerLoaded')
 AddEventHandler('RSGCore:Client:OnPlayerLoaded', function(playerData)
@@ -12,6 +12,7 @@ local function XP(args, metadata, amount)
     TriggerServerEvent('HDRP-skills:server:XP', args, metadata, amount)
 end
 exports('XP', XP)
+
 
 
 local function RegisterCategoryEvent(mainCategory, category, menuData)
@@ -33,16 +34,15 @@ local function CreateMainMenuOption(mainMenu, mainCategory, category)
     })
 end
 
-local function CreateMenuOption(mainCategory, category, data, newXP)
-    local currentXP = newXP or (PlayerData and PlayerData.metadata[data.Rep]) or 0
-    local progress = (currentXP % 100) / 100 * 100
+local function CreateMenuOption(mainCategory, category, data)
+    local currentXP = RSGCore.Functions.GetPlayerData().metadata[data.Rep]
 
     local option = {
         title = data.title,
         icon = data.Icon,
         iconColor = data.IconColour,
-        description = 'Nivel: ' .. math.floor(currentXP / 100) .. '  ' .. 'Experiencia: ' .. progress .. '%',
-        progress = { progress },
+        description = 'Nivel: ' .. math.floor(currentXP / 100) .. '  ' .. 'Experiencia: ' ..((currentXP % 100) / 100 * 100).. '%',
+        progress = { (currentXP % 100) / 100 * 100 },
         colorScheme = data.ProgressColour,
         event = data.event,
         args = data.args,
@@ -110,7 +110,6 @@ end
 -- Evento principal para abrir el menú principal
 RegisterNetEvent('HDRP-skills:client:openmenu')
 AddEventHandler('HDRP-skills:client:openmenu', function(playerId)
-
     local mainMenu = {
         id = 'main_menu',
         title = 'Menú Principal',
@@ -125,10 +124,6 @@ AddEventHandler('HDRP-skills:client:openmenu', function(playerId)
 
     lib.registerContext(mainMenu)
     lib.showContext(mainMenu.id)
-    -- Después de abrir el menú, solicita las experiencias actualizadas al servidor
-    for metadata, _ in pairs(currentXP) do
-        TriggerServerEvent('HDRP-skills:server:requestXPData', metadata)
-    end
 end)
 
 -- Evento para mostrar habilidades o reputaciones de una categoría específica
@@ -137,7 +132,6 @@ AddEventHandler('HDRP-skills:client:show_category', function(data)
     local mainCategory = data.mainCategory
     local category = data.category
     local categoryMenu = menus[mainCategory][category]
-    --TriggerClientEvent('HDRP-skills:client:updateXPData', playerId, newXP)
 
     if Config.Debug == true then
         print("Evento para mostrar habilidades o reputaciones")
@@ -147,13 +141,9 @@ AddEventHandler('HDRP-skills:client:show_category', function(data)
     lib.showContext(categoryMenu.id)
 end)
 
--- Actualización de la tabla de experiencias actuales
+-- Evento para actualizar la información de XP en el cliente
 RegisterNetEvent('HDRP-skills:client:updateXPData')
-AddEventHandler('HDRP-skills:client:updateXPData', function(metadata, newXP)
-    currentXP[metadata] = newXP
-end)
-
-RegisterNetEvent('HDRP-skills:client:updateProgress')
-AddEventHandler('HDRP-skills:client:updateProgress', function(metadata)
-    print("Evento 'HDRP-skills:client:updateProgress' recibido con metadata: " .. metadata)
+AddEventHandler('HDRP-skills:server:updateXPData', function(metadata, currentXP)
+    currentXP[metadata] = currentXP  -- Actualiza la información de XP en la tabla local
+    -- Aquí puedes actualizar la información de XP en tu interfaz de usuario o realizar cualquier otra acción necesaria
 end)

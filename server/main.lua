@@ -5,13 +5,10 @@ RSGCore.Commands.Add(Config.SkillMenuCommand, Config.SkillMenuCommandDescription
 end)
 
 RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
-    local PlayerData = RSGCore.Functions.GetPlayer(source)
-    local currentxp = PlayerData.PlayerData.metadata[metadata]-- 0  -- Inicializa currentxp en 0
+    local src = source
+    local Player = RSGCore.Functions.GetPlayer(src)
+    local currentxp = Player.PlayerData.metadata[metadata]-- 0  -- Inicializa currentxp en 0
 
-     --[[ ]] if PlayerData and PlayerData.metadata then
-       currentxp = PlayerData.metadata[metadata] or 0
-    end
-    
     args = tonumber(args)
 
     if Config.Debug == true then
@@ -19,7 +16,7 @@ RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
     end
 
     if args == 1 then
-        PlayerData.Functions.SetMetaData(metadata, (currentxp + amount))
+        Player.Functions.SetMetaData(metadata, (currentxp + amount))
        
         if Config.Debug == true then
             print("XP Added - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentxp .. " | Added Amount: " .. amount)
@@ -27,7 +24,7 @@ RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
 
     elseif args == 2 then
         if currentxp >= amount then
-            PlayerData.Functions.SetMetaData(metadata, (currentxp - amount))
+            Player.Functions.SetMetaData(metadata, (currentxp - amount))
 
             if Config.Debug == true then
                 print("XP Deducted - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentxp .. " | Deducted Amount: " .. amount)
@@ -41,6 +38,10 @@ RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
             
         end
     end
+
+    -- Después de actualizar el progreso en el servidor, envía los datos actualizados al cliente
+    TriggerClientEvent('HDRP-skills:server:updateXPData', src, metadata, Player.PlayerData.metadata[metadata])
+
 end)
 
 -- Después de actualizar el progreso en el servidor, envía los datos actualizados al cliente
@@ -51,17 +52,12 @@ AddEventHandler('HDRP-skills:server:updateProgress', function(playerId, metadata
 end)
 
 
-RegisterServerEvent('HDRP-skills:server:requestXPData')
-AddEventHandler('HDRP-skills:server:requestXPData', function(metadata)
+-- Evento para enviar información actualizada de XP al cliente
+RegisterServerEvent('HDRP-skills:server:updateXPData')
+AddEventHandler('HDRP-skills:server:updateXPData', function(metadata, currentXP)
     local source = source
-    local Player = RSGCore.Functions.GetPlayer(source)
-
-    if not Player then
-        return
-    end
-
-    local currentXP = Player.Functions.GetMetaData(metadata) or 0
-
-    -- Enviar la información actualizada de XP al cliente
     TriggerClientEvent('HDRP-skills:client:updateXPData', source, metadata, currentXP)
+    print("Evento 'HDRP-skills:server:updateXPData' enviado al cliente con metadata: " .. metadata)
 end)
+
+
