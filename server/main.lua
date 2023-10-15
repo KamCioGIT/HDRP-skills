@@ -5,9 +5,13 @@ RSGCore.Commands.Add(Config.SkillMenuCommand, Config.SkillMenuCommandDescription
 end)
 
 RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
+    --local currentXP = Player.PlayerData.metadata[metadata]-- 0  -- Inicializa currentxp en 0
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
-    local currentxp = Player.PlayerData.metadata[metadata]-- 0  -- Inicializa currentxp en 0
+    
+    local player = source
+    local playerData = RSGCore.Functions.GetPlayerData(player)
+    local currentXP = playerData.metadata[metadata]
 
     args = tonumber(args)
 
@@ -16,24 +20,24 @@ RegisterServerEvent('HDRP-skills:server:XP', function(args, metadata, amount)
     end
 
     if args == 1 then
-        Player.Functions.SetMetaData(metadata, (currentxp + amount))
+        Player.Functions.SetMetaData(metadata, (currentXP + amount))
        
         if Config.Debug == true then
-            print("XP Added - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentxp .. " | Added Amount: " .. amount)
+            print("XP Added - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentXP .. " | Added Amount: " .. amount)
         end
 
     elseif args == 2 then
-        if currentxp >= amount then
-            Player.Functions.SetMetaData(metadata, (currentxp - amount))
+        if currentXP >= amount then
+            Player.Functions.SetMetaData(metadata, (currentXP - amount))
 
             if Config.Debug == true then
-                print("XP Deducted - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentxp .. " | Deducted Amount: " .. amount)
+                print("XP Deducted - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentXP .. " | Deducted Amount: " .. amount)
             end
 
         else
             -- Aquí puedes manejar el caso en el que el jugador no tenga suficiente XP para deducir
             if Config.Debug == true then
-                print("No hay suficiente XP para deducir - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentxp .. " | Deducted Amount: " .. amount)
+                print("No hay suficiente XP para deducir - Player: " .. source .. " | Metadata: " .. metadata .. " | Current XP: " .. currentXP .. " | Deducted Amount: " .. amount)
             end
             
         end
@@ -59,5 +63,4 @@ AddEventHandler('HDRP-skills:server:updateXPData', function(metadata, currentXP)
     TriggerClientEvent('HDRP-skills:client:updateXPData', source, metadata, currentXP)
     print("Evento 'HDRP-skills:server:updateXPData' enviado al cliente con metadata: " .. metadata)
 end)
-
 

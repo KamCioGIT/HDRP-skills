@@ -1,18 +1,17 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
 local menus = {}
---local currentXP = {}  -- Declarar una tabla para almacenar las experiencias actuales
+local currentXP = {}  -- Declarar una tabla para almacenar las experiencias actuales
 --local currentXP = 0
 
-RegisterNetEvent('RSGCore:Client:OnPlayerLoaded')
+--[[ RegisterNetEvent('RSGCore:Client:OnPlayerLoaded')
 AddEventHandler('RSGCore:Client:OnPlayerLoaded', function(playerData)
     PlayerData = playerData
-end)
+end) ]]
 
 local function XP(args, metadata, amount)
     TriggerServerEvent('HDRP-skills:server:XP', args, metadata, amount)
 end
 exports('XP', XP)
-
 
 
 local function RegisterCategoryEvent(mainCategory, category, menuData)
@@ -35,7 +34,10 @@ local function CreateMainMenuOption(mainMenu, mainCategory, category)
 end
 
 local function CreateMenuOption(mainCategory, category, data)
-    local currentXP = RSGCore.Functions.GetPlayerData().metadata[data.Rep]
+    local src = source
+   --local currentXP = RSGCore.Functions.GetPlayerData().metadata[data.Rep] or 0
+   local playerData = RSGCore.Functions.GetPlayerData(src)
+   local currentXP = playerData.metadata[data.Rep]
 
     local option = {
         title = data.title,
@@ -142,8 +144,15 @@ AddEventHandler('HDRP-skills:client:show_category', function(data)
 end)
 
 -- Evento para actualizar la información de XP en el cliente
+RegisterNetEvent('HDRP-skills:client:updateProgress')
+AddEventHandler('HDRP-skills:server:updateProgress', function(playerId, metadata)
+    TriggerClientEvent('HDRP-skills:client:updateProgress', playerId, metadata)
+end)
+
+-- Evento para actualizar la información de XP en el cliente
 RegisterNetEvent('HDRP-skills:client:updateXPData')
 AddEventHandler('HDRP-skills:server:updateXPData', function(metadata, currentXP)
-    currentXP[metadata] = currentXP  -- Actualiza la información de XP en la tabla local
+    local src = source
+    TriggerClientEvent('HDRP-skills:client:updateXPData', src, metadata, currentXP)
     -- Aquí puedes actualizar la información de XP en tu interfaz de usuario o realizar cualquier otra acción necesaria
 end)
